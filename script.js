@@ -102,35 +102,53 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-const music =['An American Elegy.mp3','A Mother Of A Revolution Omar Thomas  Symphonic Winds  Capital U Conservatory of Music.mp3'];
-var audioPlayer = document.getElementById('audioPlayer');
-var audioSource = document.getElementById('audioSource');
-var switchButton = document.getElementById('switchButton');
-var cur =0;
-document.getElementById('playButton').addEventListener('click', function() {
-    var audio = document.getElementById('audioPlayer');
-    if (audio.paused) {
-        audio.play();
+document.addEventListener('DOMContentLoaded', function () {
+    const music = ['An American Elegy.mp3', 'A Mother Of A Revolution Omar Thomas  Symphonic Winds  Capital U Conservatory of Music.mp3'];
+    const audioPlayer = document.getElementById('audioPlayer');
+    const switchButton = document.getElementById('switchButton');
+    let cur = 0;
+  
+    // Check if there's a saved progress in local storage
+    const savedProgress = localStorage.getItem('audioProgress');
+    if (savedProgress) {
+      audioPlayer.currentTime = parseFloat(savedProgress);
+    }
+  
+    document.getElementById('playButton').addEventListener('click', function () {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
         document.getElementById('playButton').textContent = 'Pause Audio';
-    } else {
-        audio.pause();
-        audio.currentTime = 0;
+      } else {
+        audioPlayer.pause();
         document.getElementById('playButton').textContent = 'Play Audio';
-    }
-});
+      }
+    });
+  
+    switchButton.addEventListener('click', function () {
+      cur = (cur ==0) ? 1 : 0;
+      switchSong();
+    });
+  
+    function switchSong() {
 
-switchButton.addEventListener('click', function() {
-    if (cur ==0) {
-        cur =1;
-        audioPlayer.src = music[cur];
-        audioPlayer.load();
-        audioPlayer.play();
-        switchButton.textContent = 'Switch to Song 1';
-    } else {
-        cur =0;
-        audioPlayer.src = music[cur];
-        audioPlayer.load();
-        audioPlayer.play();
-        switchButton.textContent = 'Switch to Song 2';
+        localStorage.removeItem('audioProgress');
+      audioPlayer.src = music[cur];
+      audioPlayer.load();
+      audioPlayer.play();
+      switchButton.textContent = `Switch to Song ${cur + 1}`;
     }
-});
+  
+    // Listen for the pause event
+    audioPlayer.addEventListener('pause', function () {
+      // Save the current playback time in local storage
+      console.log(audioPlayer.currentTime);
+      localStorage.setItem('audioProgress', audioPlayer.currentTime.toString());
+    });
+  
+    // You can also add more functionality for play, stop, etc.
+    // For example, to clear the saved progress when the audio is stopped:
+    audioPlayer.addEventListener('ended', function () {
+      localStorage.removeItem('audioProgress');
+    });
+  });
+  
