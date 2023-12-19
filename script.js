@@ -2,7 +2,7 @@ const sendChatBtn = document.querySelector(".chat-input span");
 const chatInput= document.querySelector(".chat-input textarea");
 const chatbox= document.querySelector(".chatbox");
 const chatToggler = document.querySelector(".chatbot-toggler");
-const API_KEY = "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";
+const API_KEY = "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";
 let userMessage;
 const createChatLi=(message, className)=>{
     //create a chat <l> element with apssed message and className
